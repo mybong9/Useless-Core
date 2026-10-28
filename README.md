@@ -6,6 +6,13 @@ Minecraft **1.20.1**, **Forge**, mod ID `useless_core`, current source version *
 本仓库为该模组的独立源码仓库。请查看 [构建说明 / Building](BUILDING.md)
 了解四个仓库的联合构建方式；发布更新记录见 [CHANGELOG.md](CHANGELOG.md)。
 
+<!-- releases:start -->
+## 下载 / Releases
+
+最新可安装 JAR、对应源码标签及校验文件见 [GitHub Releases](https://github.com/mybong9/Useless-Core/releases/latest)。
+安装前请查看下方依赖版本表；构建用第三方 API JAR 不属于本模组发布文件。
+<!-- releases:end -->
+
 <!-- runtime-dependencies:start -->
 ## 运行环境与依赖版本
 
