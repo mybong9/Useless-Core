@@ -47,3 +47,10 @@ Third-party resource licenses remain attached to their respective assets.
 
 Source code, resources and build scripts are included. Game saves, runtime folders,
 crash reports, local configuration, caches, credentials and third-party dependency JARs are excluded.
+
+<!-- project-license:start -->
+## 许可证 / License
+
+本项目采用 [MIT License](LICENSE)。再分发时请保留许可证和版权声明。
+第三方代码、资源及依赖仍保留各自已有的许可证和版权声明，本许可证不替代这些声明。
+<!-- project-license:end -->
