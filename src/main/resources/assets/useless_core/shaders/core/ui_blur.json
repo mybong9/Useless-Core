@@ -1,0 +1,24 @@
+{
+  "vertex": "useless_core:ui_blur",
+  "fragment": "useless_core:ui_blur",
+  "attributes": [
+    "Position",
+    "UV0"
+  ],
+  "samplers": [
+    {
+      "name": "Sampler0"
+    }
+  ],
+  "uniforms": [
+    {
+      "name": "Step",
+      "type": "float",
+      "count": 2,
+      "values": [
+        0,
+        0
+      ]
+    }
+  ]
+}

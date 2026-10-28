@@ -1,0 +1,86 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = mod_id }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.withSourcesJar()
+jarJar.enable()
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'info'
+            mods { "${mod_id}" { source sourceSets.main } }
+        }
+        client {}
+        server { args '--nogui' }
+    }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository { flatDir { dirs '../UselessMod/libs' } }
+        filter { includeModule('io.github.llamalad7', 'mixinextras-forge') }
+    }
+    maven { url = 'https://maven.minecraftforge.net' }
+    maven { url = 'https://cursemaven.com' }
+}
+
+dependencies {
+    compileOnly files('../UselessMod/libs/mixinextras-common-0.5.5.jar')
+    jarJar('io.github.llamalad7:mixinextras-forge:0.5.5') {
+        jarJar.ranged(it, '[0.5.5,)')
+    }
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compileOnly fg.deobf("curse.maven:applied-energistics-2-223794:7148487")
+    implementation 'org.spongepowered:mixin:0.8.5'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    annotationProcessor files('../UselessMod/libs/mixinextras-common-0.5.5.jar')
+}
+
+mixin {
+    add sourceSets.main, 'useless_core.refmap.json'
+    config 'useless_core.mixins.json'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version,
+            forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id,
+            mod_name: mod_name,
+            mod_license: mod_license,
+            mod_version: mod_version,
+            mod_authors: mod_authors,
+            mod_description: mod_description
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) { expand replaceProperties }
+}
+
+tasks.named('jar', Jar).configure { finalizedBy 'reobfJar' }
+
+reobf { jarJar {} }
+tasks.named('jarJar', Jar).configure {
+    manifest.attributes('MixinConfigs': 'useless_core.mixins.json')
+    finalizedBy 'reobfJarJar'
+}

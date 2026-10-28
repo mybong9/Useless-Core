@@ -1,0 +1,17 @@
+.gradle/
+build/
+run/
+run-data/
+logs/
+crash-reports/
+.idea/
+.vscode/
+*.iml
+*.log
+.env
+.env.*
+*.pem
+*.key
+settings.json
+libs/*.jar
+local-maven/**/*.jar

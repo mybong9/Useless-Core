@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.sorrowmist.uselesscore.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "useless_core.refmap.json",
+  "mixins": ["BlockDropsMixin", "MenuTypeBuilderAccess"],
+  "client": ["client.CoreFontSetMixin", "client.CoreFontWidthMixin", "client.CoreFontStyleMixin", "client.CoreFontTextureMixin", "client.FittedContainerEventsMixin", "client.FittedTooltipMixin"],
+  "injectors": {"defaultRequire": 1}
+}
