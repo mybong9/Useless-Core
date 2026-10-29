@@ -14,6 +14,7 @@ public final class CoreFontScreen extends Screen {
     private CoreFontSettings.Options pending=CoreFontSettings.options();
     private Component status=Component.empty();
     private boolean applying;
+    private final CoreFontPreview previewFont=new CoreFontPreview();
     private Button apply,family;
     private EditBox file,hex;
     private static final int[] PALETTE={0x000000,0x333333,0x666666,0x999999,0xcccccc,0xffffff,0x8b0000,0xff0000,
@@ -61,7 +62,7 @@ public final class CoreFontScreen extends Screen {
             try{CoreFontSettings.prepareDirectory();Util.getPlatform().openFile(CoreFontSettings.directory().toFile());}
             catch(Exception exception){status=text("failed");}
         }).bounds(x,top+69,142,20).build());
-        addRenderableWidget(Button.builder(text("rescan"),b->rebuildWidgets()).bounds(x+148,top+69,142,20).build());
+        addRenderableWidget(Button.builder(text("rescan"),b->{previewFont.close();rebuildWidgets();}).bounds(x+148,top+69,142,20).build());
         addRenderableWidget(Button.builder(text(pending.shadow()?"shadow_on":"shadow_off"),b->{
             pending=new CoreFontSettings.Options(pending.choice(),pending.customFile(),pending.size(),pending.bold(),pending.italic(),pending.color(),!pending.shadow());rebuildWidgets();
         }).bounds(x,143,142,20).tooltip(tip("shadow_hint")).build());
@@ -112,16 +113,17 @@ public final class CoreFontScreen extends Screen {
         int color=pending.color(),luma=((color>>16&255)*299+(color>>8&255)*587+(color&255)*114)/1000;
         g.fill(left,166,left+290,190,luma<100?0xe08b9099:0xe0202530);
         CoreFontSettings.preview(pending.shadow(),()->{
-            float ratio=(float)pending.size()/CoreFontSettings.options().size();
             String sample=text("preview").getString();
+            var sampleFont=previewFont.font(pending,sample,font);
             Component value=Component.literal(sample).withStyle(s->s.withBold(pending.bold()).withItalic(pending.italic()).withColor(pending.color()));
-            while(sample.length()>1 && font.width(value)*ratio>270){sample=sample.substring(0,sample.length()-1);value=Component.literal(sample).withStyle(s->s.withBold(pending.bold()).withItalic(pending.italic()).withColor(pending.color()));}
-            g.pose().pushPose();g.pose().translate(width/2f,171,0);g.pose().scale(ratio,ratio,1);
-            g.drawString(font,value,-font.width(value)/2,0,0xff000000|pending.color(),pending.shadow());g.pose().popPose();
+            while(sample.length()>1 && sampleFont.width(value)>270){sample=sample.substring(0,sample.length()-1);value=Component.literal(sample).withStyle(s->s.withBold(pending.bold()).withItalic(pending.italic()).withColor(pending.color()));}
+            g.pose().pushPose();g.pose().translate(width/2f,171,0);
+            g.drawString(sampleFont,value,-sampleFont.width(value)/2,0,0xff000000|pending.color(),pending.shadow());g.pose().popPose();
         });
         g.drawCenteredString(font,font.plainSubstrByWidth(status.getString(),width-20),width/2,height-44,0xffffffff);
         if(my>=121 && my<139 && mx>=left && mx<left+288)
             g.renderTooltip(font,Component.literal(String.format(java.util.Locale.ROOT,"#%06X",PALETTE[(mx-left)/18])),mx,my);
     }
     @Override public void onClose(){if(!applying)minecraft.setScreen(parent);}
+    @Override public void removed(){previewFont.close();super.removed();}
 }

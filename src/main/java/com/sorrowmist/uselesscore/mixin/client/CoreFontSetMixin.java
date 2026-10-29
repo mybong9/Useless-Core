@@ -18,6 +18,7 @@ public abstract class CoreFontSetMixin {
     @Shadow @Final private ResourceLocation name;
     @ModifyVariable(method="reload",at=@At("HEAD"),argsOnly=true)
     private List<GlyphProvider> uselessCore$font(List<GlyphProvider> original) {
+        if(Minecraft.DEFAULT_FONT.equals(name))com.sorrowmist.uselesscore.client.font.CoreFontPreview.fallbacks(original);
         if(!Minecraft.DEFAULT_FONT.equals(name) && !Minecraft.UNIFORM_FONT.equals(name))return original;
         var custom=CoreFontSettings.createProvider();
         float scale=CoreFontSettings.scale();

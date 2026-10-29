@@ -140,9 +140,18 @@ public final class CoreFontSettings {
     /** Use Minecraft's native glyph provider, including the first face of TrueType collections. */
     public static GlyphProvider createProvider() {
         Choice choice=selected();if(choice==Choice.DEFAULT)return null;
+        try{return createProvider(options());}
+        catch(Exception exception){
+            error=choice.id;LogUtils.getLogger().warn("Cannot load Core font {}; keeping Minecraft fallback",choice.id,exception);
+            return null;
+        }
+    }
+    /** Load pending preview settings without changing saved preferences or the global error state. */
+    public static GlyphProvider createProvider(Options requested) throws java.io.IOException {
+        Choice choice=requested.choice();if(choice==Choice.DEFAULT)return null;
         ByteBuffer memory=null;STBTTFontinfo info=null;
         try {
-            Path file=find(choice);
+            Path file=find(choice,requested.customFile());
             if(file==null)throw new java.io.IOException("Font file is missing: "+choice.id);
             long length=Files.size(file);
             if(length<12 || length>64*1024*1024)throw new java.io.IOException("Invalid font file size");
@@ -151,11 +160,10 @@ public final class CoreFontSettings {
             info=STBTTFontinfo.malloc();
             int offset=STBTruetype.stbtt_GetFontOffsetForIndex(memory,0);
             if(offset<0 || !STBTruetype.stbtt_InitFont(info,memory,offset))throw new java.io.IOException("Unsupported or damaged font");
-            return new SmoothTrueTypeGlyphProvider(memory,info,options().size,options().bold);
+            return new SmoothTrueTypeGlyphProvider(memory,info,requested.size(),requested.bold());
         }catch(Exception exception) {
             if(info!=null)info.free();if(memory!=null)MemoryUtil.memFree(memory);
-            error=choice.id;LogUtils.getLogger().warn("Cannot load Core font {}; keeping Minecraft fallback",choice.id,exception);
-            return null;
+            throw new java.io.IOException("Cannot load font: "+choice.id,exception);
         }
     }
 }

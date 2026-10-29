@@ -1,7 +1,7 @@
 # Useless-Core
 Shared APIs and client UI infrastructure for the Useless-CE-Unofficial Forge 1.20.1 mod family.
 
-Minecraft **1.20.1**, **Forge**, mod ID `useless_core`, current source version **1.0.15**.
+Minecraft **1.20.1**, **Forge**, mod ID `useless_core`, current source version **1.0.16**.
 
 本仓库为该模组的独立源码仓库。请查看 [构建说明 / Building](BUILDING.md)
 了解四个仓库的联合构建方式；发布更新记录见 [CHANGELOG.md](CHANGELOG.md)。
@@ -16,7 +16,7 @@ Minecraft **1.20.1**, **Forge**, mod ID `useless_core`, current source version *
 <!-- runtime-dependencies:start -->
 ## 运行环境与依赖版本
 
-对应发布版本：**1.0.15**。本工程目标为 **Minecraft 1.20.1 / Forge**，使用 **Java 17+**（编译目标为 Java 17）。
+对应发布版本：**1.0.16**。本工程目标为 **Minecraft 1.20.1 / Forge**，使用 **Java 17+**（编译目标为 Java 17）。
 以下依赖范围直接依据该版本发布 JAR 的 `META-INF/mods.toml`，不是编译时所用依赖版本。
 
 ### 必需前置
