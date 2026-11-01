@@ -14,7 +14,16 @@ public final class CorePacketContext {
 
     public Player player() {
         var sender = context.getSender();
-        return sender != null ? sender : Minecraft.getInstance().player;
+        if (sender != null) return sender;
+        return net.minecraftforge.fml.loading.FMLEnvironment.dist == net.minecraftforge.api.distmarker.Dist.CLIENT
+                ? ClientAccess.player() : null;
+    }
+
+    @net.minecraftforge.api.distmarker.OnlyIn(net.minecraftforge.api.distmarker.Dist.CLIENT)
+    private static final class ClientAccess {
+        private static Player player() {
+            return Minecraft.getInstance().player;
+        }
     }
 
     public void enqueueWork(Runnable work) {
