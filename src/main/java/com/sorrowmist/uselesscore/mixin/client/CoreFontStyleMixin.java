@@ -20,7 +20,13 @@ public abstract class CoreFontStyleMixin {
     private void uselessCore$singleBoldGlyph(Font font,BakedGlyph glyph,boolean bold,boolean italic,
             float offset,float x,float y,Matrix4f pose,VertexConsumer vertices,
             float red,float green,float blue,float alpha,int light,Operation<Void> original){
-        original.call(font,glyph,bold && offset!=0f,italic,offset,x,y,pose,vertices,red,green,blue,alpha,light);
+        original.call(font,glyph,false,italic,offset,x,y,pose,vertices,red,green,blue,alpha,light);
+        // Fill the stroke continuously rather than drawing two disconnected outlines.
+        if(bold && offset>0f){
+            int steps=Math.max(1,(int)Math.ceil(offset/.2f));
+            for(int i=1;i<=steps;i++)
+                original.call(font,glyph,false,italic,offset,x+offset*i/steps,y,pose,vertices,red,green,blue,alpha,light);
+        }
     }
     @Shadow @Final private float r;
     @Shadow @Final private float g;

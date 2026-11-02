@@ -14,6 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FontTexture.class)
 public abstract class CoreFontTextureMixin extends AbstractTexture {
     @Unique private boolean uselessCore$smooth;
+    @Unique private boolean uselessCore$assigned;
+    @Inject(method="add",at=@At("HEAD"),cancellable=true)
+    private void uselessCore$separateAtlas(SheetGlyphInfo sheet,CallbackInfoReturnable<BakedGlyph> callback){
+        boolean smooth=sheet instanceof SmoothSheetGlyphInfo;
+        if(uselessCore$assigned && smooth!=uselessCore$smooth){callback.setReturnValue(null);return;}
+        uselessCore$assigned=true;
+        uselessCore$smooth=smooth;
+    }
     @Override public void setFilter(boolean blur,boolean mipmap){super.setFilter(blur || uselessCore$smooth,mipmap);}
     @Inject(method="add",at=@At("RETURN"))
     private void uselessCore$smoothAtlas(SheetGlyphInfo sheet,CallbackInfoReturnable<BakedGlyph> callback){
