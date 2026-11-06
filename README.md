@@ -16,27 +16,25 @@ Minecraft **1.20.1**, **Forge**, mod ID `useless_core`.
 <!-- runtime-dependencies:start -->
 ## 运行环境与依赖版本
 
-对应发布版本：**1.0.16**。本工程目标为 **Minecraft 1.20.1 / Forge**，使用 **Java 17+**（编译目标为 Java 17）。
-以下依赖范围直接依据该版本发布 JAR 的 `META-INF/mods.toml`，不是编译时所用依赖版本。
+对应发布版本：**1.0.19**。Minecraft **1.20.1 / Forge**，Java **17+**。
+以下范围依据发布 JAR 的加载声明，其他模组仍需满足各自前置要求。
 
 ### 必需前置
 
-| 依赖 | Mod ID | 最低版本 / 加载范围 | 适用端 |
-| --- | --- | --- | --- |
-| Minecraft Forge | `forge` | 47 或更高| 客户端、服务端 |
-| Minecraft | `minecraft` | 1.20.1  | 客户端、服务端 |
+| Mod ID | 版本范围 | 适用端 |
+| --- | --- | --- |
+| `forge` | `[47,)` | 客户端、服务端 |
+| `minecraft` | `[1.20.1,)` | 客户端、服务端 |
 
 ### 可选联动
 
-该模块没有在加载声明中设置额外的可选模组版本要求。
+| Mod ID | 版本范围 | 适用端 |
+| --- | --- | --- |
+| 无额外加载依赖 | — | — |
 
-可选联动不要求安装；安装时须符合上表版本范围，并安装该联动模组自身要求的前置。未声明最低版本的其他动态联动不在此处编造版本下限。
+`[x,)` 表示最低 x、无上限；`[0,)` 表示未限定最低版本。未在表中列出的其他动态联动仍可存在。
 
-### 内置运行库
-
-**MixinExtras Forge 0.5.5 或更高，通过 Jar-in-Jar 内置并选择兼容版本，通常无需另外安装；它不是名为 `mixinextras` 的必装 Forge 模组。Core 本身没有声明 AE2 为必需前置。
-
-Minecraft 的宽松加载声明不代表本工程已支持其他 Minecraft 主版本。开发构建及本地编译 API 清单见 [BUILDING.md](BUILDING.md)。
+MixinExtras Forge 0.5.5 或更高由 Core 通过 Jar-in-Jar 内置，通常无需单独安装；Core 本身不要求 AE2。
 <!-- runtime-dependencies:end -->
 
 ## Source and attribution
